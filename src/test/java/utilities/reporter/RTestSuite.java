@@ -25,8 +25,8 @@ public class RTestSuite {
     }
 
     private void setTimeStamp() {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.timeStamp = timeStamp.toString();
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        this.timeStamp = ts.toString();
     }
 
     public RTest addTest(RTest test){

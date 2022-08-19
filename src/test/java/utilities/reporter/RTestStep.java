@@ -45,8 +45,8 @@ public class RTestStep {
     }
 
     private void setTimeStamp() {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        this.timeStamp = timeStamp.toString();
+        Timestamp ts = new Timestamp(System.currentTimeMillis());
+        this.timeStamp = ts.toString();
     }
     private void setId() {
         this.id = nextStepId;

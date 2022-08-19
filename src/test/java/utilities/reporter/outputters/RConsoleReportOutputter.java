@@ -1,8 +1,25 @@
-package utilities.reporter;
+package utilities.reporter.outputters;
+
+import utilities.reporter.*;
+import utilities.reporter.outputters.IReportOutputter;
 
 import java.util.List;
 
-public class RConsoleReportOutputter implements IReportOutputter{
+public class RConsoleReportOutputter implements IReportOutputter {
+    private RLogLevel logLevel;
+
+    public RConsoleReportOutputter() {
+        initRConsoleReportOutputter();
+    }
+
+    private void initRConsoleReportOutputter() {
+        logLevel = RLogLevel.DEBUG;
+    }
+
+    public RConsoleReportOutputter(RLogLevel logLevel) {
+        this.logLevel = logLevel;
+    }
+
     @Override
     public void createReport(List<RTestSuite> suites) {
         if (suites.size()>0){
@@ -34,6 +51,25 @@ public class RConsoleReportOutputter implements IReportOutputter{
             System.out.println("TEST STATUS:"+test.getTestStatus());
             reportPreConditions(test.getPreConditions());
             reportTestSteps(test.getTestSteps());
+        }
+    }
+
+    @Override
+    public void reportLogs(List<RLog> logs) {
+        if (logs.size()>0){
+            System.out.println("LOGS:");
+            System.out.println("-------------------------------------");
+            for(RLog log : logs){
+                reportLog(log);
+            }
+            System.out.println("-------------------------------------");
+        }
+    }
+
+    @Override
+    public void reportLog(RLog log) {
+        if (log != null && log.getLevel().getValue()>=logLevel.getValue()) {
+            System.out.println("Level-" + log.getLevel() + ":" + log.getDescription());
         }
     }
 

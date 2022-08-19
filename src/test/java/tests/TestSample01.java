@@ -5,6 +5,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 import utilities.reporter.*;
+import utilities.reporter.outputters.RXMLReportOutputter;
 
 //@Listeners({MyExcelReporter.class})
 public class TestSample01 {
@@ -14,13 +15,17 @@ public class TestSample01 {
     public void suiteSetUp() {
 
         reporter = new RTestReporter();
+        reporter.addReportOutputter(new RXMLReportOutputter());
         suite = reporter.addTestSuite("This is first test suite");
+
     }
     @Test(description = "This is sample test1")
     public void testMethod1(){
 
         RTest test1=suite.addTest("This is sample test1");
         test1.addTestStep("assertion test1","", "true", "true", RStatus.PASS);
+        test1.info("info description");
+        test1.warn("warn message");
         test1.addTestStep("assertion test2","", "true", "false", RStatus.FAIL);
     }
     @Test(description = "This is sample test2")

@@ -9,6 +9,10 @@ public enum RStatus {
 
     private String value;
 
+    public String getValue() {
+        return value;
+    }
+
     RStatus(String value) {
         this.value = value;
     }
