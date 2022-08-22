@@ -16,6 +16,14 @@ public class RExcelReportOutputter implements IReportOutputter{
     }
 
     @Override
+    public void reportSuit(RTestSuite suite) {
+        if (suite!=null) {
+            System.out.println("SUITE DESCRIPTION:" + suite.getDescription());
+            reportTests(suite.getTests());
+        }
+    }
+
+    @Override
     public void reportTests(List<RTest> tests) {
         if (tests.size()>0){
             System.out.println("TESTS:");

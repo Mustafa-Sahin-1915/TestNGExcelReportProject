@@ -1,6 +1,8 @@
 package utilities.reporter;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RTestStep {
     private static int nextStepId=0;
@@ -10,6 +12,8 @@ public class RTestStep {
     private String expectedData;
     private String actualData;
     private RStatus testStepRStatus = RStatus.TODO;
+
+    private List<RLog> logs;
 
     private String timeStamp;
 
@@ -33,12 +37,11 @@ public class RTestStep {
         this.actualData = actualData;
     }
 
-
-
     private void initTestStep() {
         nextStepId++;
         setId();
         setTimeStamp();
+        logs = new ArrayList<>();
     }
     public String getTimeStamp() {
         return timeStamp;
@@ -93,5 +96,28 @@ public class RTestStep {
 
     public void setTestStepStatus(RStatus testStepRStatus) {
         this.testStepRStatus = testStepRStatus;
+    }
+
+    public void log(String description, RLogLevel level){
+        logs.add(new RLog(description, level));
+    }
+    public void debug(String description){
+        log(description, RLogLevel.DEBUG);
+    }
+    public void info(String description){
+        log(description, RLogLevel.INFO);
+    }
+    public void warn(String description){
+        log(description, RLogLevel.WARN);
+    }
+    public void error(String description){
+        log(description, RLogLevel.ERROR);
+    }
+    public void fatal(String description){
+        log(description, RLogLevel.FATAL);
+    }
+
+    public List<RLog> getLogs() {
+        return logs;
     }
 }

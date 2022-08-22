@@ -7,6 +7,8 @@ import java.util.List;
 
 public class RXMLReportOutputter implements IReportOutputter{
     private RLogLevel logLevel;
+    private int tablevel=0;
+
 
     public RXMLReportOutputter(RLogLevel logLevel) {
         this.logLevel = logLevel;
@@ -22,120 +24,147 @@ public class RXMLReportOutputter implements IReportOutputter{
         builder = new StringBuilder();
         logLevel = RLogLevel.DEBUG;
     }
+    private void addTab(){
+        for(int i=0;i<tablevel;i++){
+            builder.append("\t");
+        }
+    }
 
     @Override
     public void createReport(List<RTestSuite> suites) {
         if (suites.size()>0){
-            builder.append("<suites>");builder.append(Keys.ENTER);
-
+            builder.append("<suites>");builder.append("\n");
+            tablevel++;
             for(RTestSuite suite:suites){
-                builder.append("<suite>");builder.append(Keys.ENTER);
-                System.out.println("SUITE DESCRIPTION:"+suite.getDescription());
-                reportTests(suite.getTests());
-                builder.append("</suite>");builder.append(Keys.ENTER);
+                reportSuit(suite);
             }
-            builder.append("</suites>");builder.append(Keys.ENTER);
+            builder.append("</suites>");builder.append("\n");
         }
         writeReportToFile();
     }
-
+    @Override
+    public void reportSuit(RTestSuite suite) {
+        if (suite!=null) {
+            addTab();
+            builder.append("<suite>");builder.append("\n");
+            tablevel++;
+            reportTests(suite.getTests());
+            builder.append("</suite>");builder.append("\n");
+            tablevel--;
+        }
+    }
     @Override
     public void reportTests(List<RTest> tests) {
         if (tests.size()>0){
-            builder.append("<tests>");builder.append(Keys.ENTER);
-            System.out.println("TESTS:");
+            addTab();
+            builder.append("<tests>");builder.append("\n");
+            tablevel++;
             for(RTest test:tests){
-
                 reportTest(test);
             }
-            builder.append("</tests>");builder.append(Keys.ENTER);
-
+            builder.append("</tests>");builder.append("\n");
+            tablevel--;
         }
     }
 
     @Override
     public void reportTest(RTest test) {
         if (test!=null){
-            builder.append("<test>");builder.append(Keys.ENTER);
-            builder.append("<id>");builder.append(Keys.ENTER);
-            builder.append(test.getId());builder.append(Keys.ENTER);
-            builder.append("</id>");builder.append(Keys.ENTER);
-            builder.append("<objective>");builder.append(Keys.ENTER);
-            builder.append(test.getObjective());builder.append(Keys.ENTER);
-            builder.append("</objective>");builder.append(Keys.ENTER);
-            builder.append("<group>");builder.append(Keys.ENTER);
-            builder.append(test.getGroup());builder.append(Keys.ENTER);
-            builder.append("</group>");builder.append(Keys.ENTER);
-            builder.append("<status>");builder.append(Keys.ENTER);
-            builder.append(test.getTestStatus().getValue());builder.append(Keys.ENTER);
-            builder.append("</status>");builder.append(Keys.ENTER);
-
+            addTab();
+            builder.append("<test>");builder.append("\n");
+            tablevel++;
+            addTab();builder.append("<id>");builder.append("\n");
+            addTab();builder.append(test.getId());builder.append("\n");
+            addTab();builder.append("</id>");builder.append("\n");
+            addTab();builder.append("<objective>");builder.append("\n");
+            addTab();builder.append(test.getObjective());builder.append("\n");
+            addTab();builder.append("</objective>");builder.append("\n");
+            addTab();builder.append("<group>");builder.append("\n");
+            addTab();builder.append(test.getGroup());builder.append("\n");
+            addTab();builder.append("</group>");builder.append("\n");
+            addTab();builder.append("<status>");builder.append("\n");
+            addTab();builder.append(test.getTestStatus().getValue());builder.append("\n");
+            addTab();builder.append("</status>");builder.append("\n");
             reportPreConditions(test.getPreConditions());
             reportTestSteps(test.getTestSteps());
-
-            builder.append("</test>");builder.append(Keys.ENTER);
+            addTab();builder.append("</test>");builder.append("\n");
+            tablevel--;
         }
     }
 
     @Override
     public void reportLogs(List<RLog> logs) {
         if (logs.size()>0){
-            builder.append("<logs>");builder.append(Keys.ENTER);
+            addTab();
+            builder.append("<logs>");builder.append("\n");
+            tablevel++;
             for(RLog log : logs){
                 reportLog(log);
             }
-            builder.append("</logs>");builder.append(Keys.ENTER);
+            addTab();builder.append("</logs>");builder.append("\n");
+            tablevel--;
         }
     }
 
     @Override
     public void reportLog(RLog log) {
         if (log != null && log.getLevel().getValue()>=logLevel.getValue()) {
-            builder.append("<log>");builder.append(Keys.ENTER);
-            builder.append("<level>");builder.append(Keys.ENTER);
-            builder.append(log.getLevel().getValue());builder.append(Keys.ENTER);
-            builder.append("</level>");builder.append(Keys.ENTER);
-            builder.append("<description>");builder.append(Keys.ENTER);
-            builder.append(log.getDescription());builder.append(Keys.ENTER);
-            builder.append("</description>");builder.append(Keys.ENTER);
-            builder.append("</log>");builder.append(Keys.ENTER);
+            addTab();
+            builder.append("<log>");builder.append("\n");
+            tablevel++;
+            addTab();builder.append("<level>");builder.append("\n");
+            addTab();builder.append(log.getLevel().getValue());builder.append("\n");
+            addTab();builder.append("</level>");builder.append("\n");
+            addTab();builder.append("<description>");builder.append("\n");
+            addTab();builder.append(log.getDescription());builder.append("\n");
+            addTab();builder.append("</description>");builder.append("\n");
+            tablevel--;
+            addTab();builder.append("</log>");builder.append("\n");
+            tablevel--;
         }
     }
 
     @Override
     public void reportTestSteps(List<RTestStep> RTestSteps) {
         if (RTestSteps.size()>0){
-            builder.append("<teststeps>");builder.append(Keys.ENTER);
-            for(RTestStep RTestStep : RTestSteps){
-                reportTestStep(RTestStep);
+            addTab();builder.append("<teststeps>");builder.append("\n");
+            tablevel++;
+            for(RTestStep teststep : RTestSteps){
+                reportTestStep(teststep);
+                reportLogs(teststep.getLogs());
             }
-            builder.append("</teststeps>");builder.append(Keys.ENTER);
+            addTab();builder.append("</teststeps>");builder.append("\n");
+            tablevel--;
         }
     }
 
     @Override
     public void reportTestStep(RTestStep RTestStep) {
         if (RTestStep !=null){
-            builder.append("<teststep>");builder.append(Keys.ENTER);
-            builder.append("<id>");builder.append(Keys.ENTER);
-            builder.append(RTestStep.getId());builder.append(Keys.ENTER);
-            builder.append("</id>");builder.append(Keys.ENTER);
-            builder.append("<description>");builder.append(Keys.ENTER);
-            builder.append(RTestStep.getDescription());builder.append(Keys.ENTER);
-            builder.append("</description>");builder.append(Keys.ENTER);
-            builder.append("<testdata>");builder.append(Keys.ENTER);
-            builder.append(RTestStep.getTestData());builder.append(Keys.ENTER);
-            builder.append("</testdata>");builder.append(Keys.ENTER);
-            builder.append("<expectedvalue>");builder.append(Keys.ENTER);
-            builder.append(RTestStep.getExpectedData());builder.append(Keys.ENTER);
-            builder.append("</expectedvalue>");builder.append(Keys.ENTER);
-            builder.append("<actualvalue>");builder.append(Keys.ENTER);
-            builder.append(RTestStep.getActualData());builder.append(Keys.ENTER);
-            builder.append("</actualvalue>");builder.append(Keys.ENTER);
-            builder.append("<status>");builder.append(Keys.ENTER);
-            builder.append(RTestStep.getTestStepStatus().getValue());builder.append(Keys.ENTER);
-            builder.append("</status>");builder.append(Keys.ENTER);
-            builder.append("</teststep>");builder.append(Keys.ENTER);
+
+            addTab(); builder.append("<teststep>");builder.append("\n");
+            tablevel++;
+            addTab();builder.append("<id>");builder.append("\n");
+            addTab();builder.append(RTestStep.getId());builder.append("\n");
+            addTab();builder.append("</id>");builder.append("\n");
+            addTab();builder.append("<description>");builder.append("\n");
+            addTab();builder.append(RTestStep.getDescription());builder.append("\n");
+            addTab();builder.append("</description>");builder.append("\n");
+            addTab();builder.append("<testdata>");builder.append("\n");
+            addTab();builder.append(RTestStep.getTestData());builder.append("\n");
+            addTab();builder.append("</testdata>");builder.append("\n");
+            addTab();builder.append("<expectedvalue>");builder.append("\n");
+            addTab();builder.append(RTestStep.getExpectedData());builder.append("\n");
+            addTab();builder.append("</expectedvalue>");builder.append("\n");
+            addTab();builder.append("<actualvalue>");builder.append("\n");
+            addTab();builder.append(RTestStep.getActualData());builder.append("\n");
+            addTab();builder.append("</actualvalue>");builder.append("\n");
+            addTab();builder.append("<status>");builder.append("\n");
+            addTab();builder.append(RTestStep.getTestStepStatus().getValue());builder.append("\n");
+            addTab();builder.append("</status>");builder.append("\n");
+            tablevel--;
+            addTab();builder.append("</teststep>");builder.append("\n");
+            tablevel--;
         }
     }
 
@@ -143,25 +172,32 @@ public class RXMLReportOutputter implements IReportOutputter{
     public void reportPreConditions(List<RPreCondition> RPreConditions) {
 
         if (RPreConditions.size()>0){
-            builder.append("<preconditions>");builder.append(Keys.ENTER);
+            addTab();
+            builder.append("<preconditions>");builder.append("\n");
+            tablevel++;
             for(RPreCondition RPreCondition : RPreConditions){
                 reportPreCondition(RPreCondition);
             }
-            builder.append("</preconditions>");builder.append(Keys.ENTER);
+            addTab();builder.append("</preconditions>");builder.append("\n");
+            tablevel--;
         }
     }
 
     @Override
     public void reportPreCondition(RPreCondition RPreCondition) {
         if (RPreCondition != null) {
-            builder.append("<precondition>");builder.append(Keys.ENTER);
-            builder.append("<id>");builder.append(Keys.ENTER);
-            builder.append(RPreCondition.getId());builder.append(Keys.ENTER);
-            builder.append("</id>");builder.append(Keys.ENTER);
-            builder.append("<description>");builder.append(Keys.ENTER);
-            builder.append(RPreCondition.getDescription());builder.append(Keys.ENTER);
-            builder.append("</description>");builder.append(Keys.ENTER);
-            builder.append("</precondition>");builder.append(Keys.ENTER);
+            addTab();
+            builder.append("<precondition>");builder.append("\n");
+            tablevel++;
+            addTab();builder.append("<id>");builder.append("\n");
+            addTab();builder.append(RPreCondition.getId());builder.append("\n");
+            addTab();builder.append("</id>");builder.append("\n");
+            addTab();builder.append("<description>");builder.append("\n");
+            addTab();builder.append(RPreCondition.getDescription());builder.append("\n");
+            addTab();builder.append("</description>");builder.append("\n");
+            tablevel--;
+            addTab();builder.append("</precondition>");builder.append("\n");
+            tablevel--;
         }
     }
     private void writeReportToFile(){

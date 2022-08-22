@@ -24,9 +24,16 @@ public class RConsoleReportOutputter implements IReportOutputter {
     public void createReport(List<RTestSuite> suites) {
         if (suites.size()>0){
             for(RTestSuite suite:suites){
-                System.out.println("SUITE DESCRIPTION:"+suite.getDescription());
-                reportTests(suite.getTests());
+                reportSuit(suite);
             }
+        }
+    }
+
+    @Override
+    public void reportSuit(RTestSuite suite) {
+        if (suite!=null) {
+            System.out.println("SUITE DESCRIPTION:" + suite.getDescription());
+            reportTests(suite.getTests());
         }
     }
 
@@ -78,8 +85,9 @@ public class RConsoleReportOutputter implements IReportOutputter {
         if (RTestSteps.size()>0){
             System.out.println("TEST STEPS:");
             System.out.println("-------------------------------------");
-            for(RTestStep RTestStep : RTestSteps){
-                reportTestStep(RTestStep);
+            for(RTestStep teststep : RTestSteps){
+                reportTestStep(teststep);
+                reportLogs(teststep.getLogs());
             }
             System.out.println("-------------------------------------");
         }

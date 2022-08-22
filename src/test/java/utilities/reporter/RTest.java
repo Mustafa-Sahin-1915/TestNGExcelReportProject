@@ -13,7 +13,7 @@ public class RTest {
 
     private List<RPreCondition> preConditions;
     private List<RTestStep> testSteps;
-    private List<RLog> logs;
+
 
     private RStatus testRStatus = RStatus.TODO;
     private String timeStamp;
@@ -27,7 +27,6 @@ public class RTest {
         this.id = nextTestId;
         preConditions = new ArrayList<>();
         testSteps = new ArrayList<>();
-        logs = new ArrayList<>();
         setTimeStamp();
     }
 
@@ -157,6 +156,8 @@ public class RTest {
         }
     }
 
+
+
     public String getTimeStamp() {
         return timeStamp;
     }
@@ -166,22 +167,5 @@ public class RTest {
         this.timeStamp = ts.toString();
     }
 
-    public void log(String description, RLogLevel level){
-        logs.add(new RLog(description, level));
-    }
-    public void debug(String description){
-        log(description, RLogLevel.DEBUG);
-    }
-    public void info(String description){
-        log(description, RLogLevel.INFO);
-    }
-    public void warn(String description){
-        log(description, RLogLevel.WARN);
-    }
-    public void error(String description){
-        log(description, RLogLevel.ERROR);
-    }
-    public void fatal(String description){
-        log(description, RLogLevel.FATAL);
-    }
+
 }

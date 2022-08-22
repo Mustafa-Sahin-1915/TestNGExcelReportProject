@@ -23,9 +23,9 @@ public class TestSample01 {
     public void testMethod1(){
 
         RTest test1=suite.addTest("This is sample test1");
-        test1.addTestStep("assertion test1","", "true", "true", RStatus.PASS);
-        test1.info("info description");
-        test1.warn("warn message");
+        RTestStep step1 = test1.addTestStep("assertion test1","", "true", "true", RStatus.PASS);
+        step1.info("info description");
+        step1.warn("warn message");
         test1.addTestStep("assertion test2","", "true", "false", RStatus.FAIL);
     }
     @Test(description = "This is sample test2")

@@ -8,6 +8,8 @@ public interface IReportOutputter {
 
     public void createReport(List<RTestSuite> suites);
 
+    public void reportSuit(RTestSuite suite);
+
     public void reportTests(List<RTest> tests);
     public void reportTest(RTest test);
 
